@@ -1,0 +1,39 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_28-dd31ec845545e55926d5d193a1b79556cdcf8c9d",
+  "solcVersion": "0.8.28",
+  "solcLongVersion": "0.8.28+commit.7893614a",
+  "userSourceNameMap": {
+    "contracts/TokenA.sol": "project/contracts/TokenA.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "cancun",
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      },
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode",
+            "evm.deployedBytecode",
+            "evm.methodIdentifiers",
+            "metadata"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/TokenA.sol": {
+        "content": "// SPDX-License-Identifier: UNLICENSED\r\npragma solidity ^0.8.28;\r\n\r\ninterface IERC20 {\r\n    function totalSupply() external view returns (uint256);\r\n    function balanceOf(address account) external view returns (uint256);\r\n    function transfer(address recipient, uint256 amount) external returns (bool);\r\n    function allowance(address owner, address spender) external view returns (uint256);\r\n    function approve(address spender, uint256 amount) external returns (bool);\r\n    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);\r\n}\r\n\r\ncontract TokenA is IERC20 {\r\n    string public name = \"TokenA\";\r\n    string public symbol = \"TKA\";\r\n    uint8 public decimals = 18;\r\n    uint256 private _totalSupply;\r\n    mapping(address => uint256) private _balances;\r\n    mapping(address => mapping(address => uint256)) private _allowances;\r\n\r\n    constructor(uint256 initialSupply) {\r\n        _totalSupply = initialSupply * 10 ** uint256(decimals);\r\n        _balances[msg.sender] = _totalSupply;\r\n    }\r\n\r\n    function totalSupply() public view override returns (uint256) {\r\n        return _totalSupply;\r\n    }\r\n\r\n    function balanceOf(address account) public view override returns (uint256) {\r\n        return _balances[account];\r\n    }\r\n\r\n    function transfer(address recipient, uint256 amount) public override returns (bool) {\r\n        require(_balances[msg.sender] >= amount, \"Insufficient balance\");\r\n        _balances[msg.sender] -= amount;\r\n        _balances[recipient] += amount;\r\n        return true;\r\n    }\r\n\r\n    function allowance(address owner, address spender) public view override returns (uint256) {\r\n        return _allowances[owner][spender];\r\n    }\r\n\r\n    function approve(address spender, uint256 amount) public override returns (bool) {\r\n        _allowances[msg.sender][spender] = amount;\r\n        return true;\r\n    }\r\n\r\n    function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool) {\r\n        require(_balances[sender] >= amount, \"Insufficient balance\");\r\n        require(_allowances[sender][msg.sender] >= amount, \"Allowance exceeded\");\r\n        _balances[sender] -= amount;\r\n        _balances[recipient] += amount;\r\n        _allowances[sender][msg.sender] -= amount;\r\n        return true;\r\n    }\r\n}"
+      }
+    }
+  }
+}
